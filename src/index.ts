@@ -47,7 +47,6 @@ const msgHandler = (client: Client) => {
 			}
 		} else {
 			if (user.state == "Name") {
-				user.name = msg.body.slice(1);
 				user.state = "None";
 				await user.save();
 			}
