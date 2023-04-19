@@ -18,7 +18,7 @@ import { UserProfile } from "./models/profile.model";
 		},
 		authStrategy: new RemoteAuth({
 			store: store,
-			backupSyncIntervalMs: 300000,
+			backupSyncIntervalMs: 60000,
 		}),
 	});
 	client.initialize();
@@ -36,7 +36,7 @@ import { UserProfile } from "./models/profile.model";
 const msgHandler = (client: Client) => {
 	client.on("message", async (msg) => {
 		let user = await UserProfile.findOne({ userId: msg.from });
-
+		console.log("Received : ", msg.from, msg.body);
 		if (!user) {
 			if (msg.body.startsWith("!")) {
 				msg.reply("Hi, whats your name");
@@ -47,6 +47,7 @@ const msgHandler = (client: Client) => {
 			}
 		} else {
 			if (user.state == "Name") {
+				user.name = msg.body;
 				user.state = "None";
 				await user.save();
 			}
